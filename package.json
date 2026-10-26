@@ -1,0 +1,19 @@
+{
+  "name": "loja-api",
+  "version": "1.0.0",
+  "description": "API de produtos, carrinho e compras para o trabalho final de Desenvolvimento de Aplicativos Móveis (CESURG)",
+  "main": "src/app.js",
+  "scripts": {
+    "dev": "node dev.js",
+    "start": "node dev.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@upstash/redis": "^1.40.0",
+    "cors": "^2.8.6",
+    "express": "^4.22.3"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -39,6 +39,10 @@ Cada usuário tem o próprio carrinho, identificado pelo `usuarioId`. Use o `uid
 
 Use sempre o mesmo `usuarioId`, senão o carrinho "some". Usuários diferentes não veem o carrinho uns dos outros.
 
+Não é preciso criar o carrinho: um `usuarioId` novo já começa com o carrinho vazio, e o primeiro `POST` de item guarda o carrinho.
+
+Em `POST` e `PUT`, envie o corpo em JSON com o cabeçalho `Content-Type: application/json`.
+
 ## Tipos (TypeScript)
 
 ```ts
@@ -87,6 +91,8 @@ type ErroApi = { erro: string };
 
 ## Produtos
 
+O catálogo é fixo: são 12 produtos em 4 categorias, e a API não tem rotas para criar ou editar produtos. A `imagem` é montada pela API a partir do `id` (`/imagens/<id>.png`), então uma URL de imagem enviada pelo app é ignorada.
+
 ### `GET /produtos`
 
 Filtros opcionais, que podem ser combinados:
@@ -111,6 +117,14 @@ Filtros opcionais, que podem ser combinados:
 ### `GET /produtos/:id`
 
 Devolve um `Produto`, ou `404` se ele não existir.
+
+### `GET /categorias`
+
+Devolve `eletronicos`, `roupas`, `casa` e `livros`, cada uma com `id` e `nome`.
+
+### `GET /formas-pagamento`
+
+Devolve `pix`, `cartao` e `boleto`, cada uma com `id` e `nome`.
 
 ## Carrinho
 
@@ -146,7 +160,7 @@ Um carrinho que nunca foi usado vem com `itens: []` e total `0`.
 
 - `quantidade` é opcional (padrão: 1).
 - Se o produto já estiver no carrinho, a quantidade **soma**, sem duplicar o item.
-- Responde `201` com o carrinho atualizado.
+- Responde `201` com o carrinho atualizado, ou `400` se passar do estoque.
 
 ### `PUT /carrinho/:usuarioId/itens/:produtoId`
 
@@ -156,11 +170,11 @@ Define a nova quantidade do item. Também aceita `PATCH`.
 { "quantidade": 3 }
 ```
 
-A quantidade precisa ser **1 ou mais**. Para tirar o item do carrinho, use `DELETE`.
+A quantidade precisa ser **1 ou mais**. Para tirar o item do carrinho, use `DELETE`. Dá `404` se o produto não estiver no carrinho.
 
 ### `DELETE /carrinho/:usuarioId/itens/:produtoId`
 
-Remove o item. Responde com o carrinho atualizado.
+Remove o item. Responde com o carrinho atualizado, ou `404` se o item não estiver no carrinho.
 
 ### `DELETE /carrinho/:usuarioId`
 
@@ -176,11 +190,11 @@ Finaliza a compra com o que está no carrinho e **esvazia o carrinho**.
 { "usuarioId": "joao-silva", "formaPagamento": "pix" }
 ```
 
-Formas de pagamento: `pix`, `cartao` e `boleto`. Responde `201` com a `Compra` criada. Não há pagamento real: a compra já vem com `status: "confirmada"`.
+Formas de pagamento: `pix`, `cartao` e `boleto`. Responde `201` com a `Compra` criada, ou `400` se o carrinho estiver vazio. Não há pagamento real: a compra já vem com `status: "confirmada"`.
 
 ### `GET /compras?usuarioId=joao-silva`
 
-Lista as compras do usuário, da mais recente para a mais antiga.
+Lista as compras do usuário, da mais recente para a mais antiga. Sem compras, devolve `[]`.
 
 ### `GET /compras/:id`
 
@@ -196,7 +210,7 @@ Quando algo dá errado, a API responde com um status de erro e um JSON com a men
 
 | Status | Quando acontece |
 |---|---|
-| 400 | Dados inválidos: `produtoId` que não é número, quantidade menor que 1, estoque insuficiente, carrinho vazio, forma de pagamento inválida, `usuarioId` inválido |
+| 400 | Dados inválidos: `produtoId` que não é número, quantidade menor que 1, estoque insuficiente, carrinho vazio, forma de pagamento inválida, `usuarioId` inválido, JSON malformado |
 | 401 | Cabeçalho `x-api-key` ausente ou com a chave errada |
 | 404 | Produto, item do carrinho, compra ou rota não encontrados |
 | 500 | Erro na API |
@@ -221,11 +235,14 @@ GET /produtos?simularErro=true
 const API = "https://loja-api-wheat.vercel.app";
 const API_KEY = "SUA_CHAVE";
 
+const cabecalhos = {
+  "Content-Type": "application/json",
+  "x-api-key": API_KEY,
+};
+
 // Listar produtos
 async function buscarProdutos(): Promise<Produto[]> {
-  const resposta = await fetch(`${API}/produtos`, {
-    headers: { "x-api-key": API_KEY },
-  });
+  const resposta = await fetch(`${API}/produtos`, { headers: cabecalhos });
   if (!resposta.ok) throw new Error("Não foi possível carregar os produtos.");
   return resposta.json();
 }
@@ -234,8 +251,19 @@ async function buscarProdutos(): Promise<Produto[]> {
 async function adicionarAoCarrinho(usuarioId: string, produtoId: number): Promise<Carrinho> {
   const resposta = await fetch(`${API}/carrinho/${usuarioId}/itens`, {
     method: "POST",
-    headers: { "Content-Type": "application/json", "x-api-key": API_KEY },
+    headers: cabecalhos,
     body: JSON.stringify({ produtoId, quantidade: 1 }),
+  });
+  const dados = await resposta.json();
+  if (!resposta.ok) throw new Error((dados as ErroApi).erro);
+  return dados as Carrinho;
+}
+
+// Remover do carrinho
+async function removerDoCarrinho(usuarioId: string, produtoId: number): Promise<Carrinho> {
+  const resposta = await fetch(`${API}/carrinho/${usuarioId}/itens/${produtoId}`, {
+    method: "DELETE",
+    headers: cabecalhos,
   });
   const dados = await resposta.json();
   if (!resposta.ok) throw new Error((dados as ErroApi).erro);
@@ -246,7 +274,7 @@ async function adicionarAoCarrinho(usuarioId: string, produtoId: number): Promis
 async function finalizarCompra(usuarioId: string, formaPagamento: FormaPagamento): Promise<Compra> {
   const resposta = await fetch(`${API}/compras`, {
     method: "POST",
-    headers: { "Content-Type": "application/json", "x-api-key": API_KEY },
+    headers: cabecalhos,
     body: JSON.stringify({ usuarioId, formaPagamento }),
   });
   const dados = await resposta.json();
@@ -264,18 +292,24 @@ function formatarPreco(centavos: number): string {
 
 ## Para o professor: rodar e publicar
 
-**Localmente** (os dados ficam na memória e se perdem ao reiniciar):
+**Localmente** (sem `API_KEY` a API fica aberta, e sem Redis os dados ficam na memória e se perdem ao reiniciar):
 
 ```bash
 npm install
 npm run dev   # http://localhost:3000
 ```
 
-**Na Vercel:**
+**Na Vercel**, o projeto `loja-api` já está ligado a este repositório: cada push na `main` faz um novo deploy de produção sozinho. A configuração atual:
 
-1. Importe o repositório na Vercel. Não precisa de configuração de build.
-2. Em **Storage**, crie um banco **Upstash for Redis** (plano gratuito) e conecte ao projeto. A integração cria as variáveis `KV_REST_API_URL` e `KV_REST_API_TOKEN`.
-3. Em **Settings → Environment Variables**, crie `API_KEY` com a chave da turma. Sem essa variável, a API fica aberta (é o que acontece ao rodar localmente).
-4. Faça um novo deploy e abra `/status`. Deve aparecer `"armazenamento": "redis"`. Se aparecer `"memoria"`, o Redis não está conectado, e os carrinhos vão se perder entre as requisições.
+| Variável | De onde vem |
+|---|---|
+| `API_KEY` | Criada em **Settings → Environment Variables**. Para trocar a chave, mude o valor e faça um novo deploy |
+| `KV_REST_API_URL`, `KV_REST_API_TOKEN` | Integração **Upstash for Redis** |
+
+O banco Redis é o `upstash-kv-claret-ferry`, no plano gratuito, compartilhado com o projeto `soldiers-mvp` (o plano gratuito só permite um banco por conta). As chaves não se misturam: o loja-api só usa `carrinho:`, `compra:`, `compras:` e `seq:`, e o soldiers-mvp usa `player:` e `rank:`. Os dois projetos dividem o limite de uso do plano gratuito.
+
+Abra `/status` para conferir: deve aparecer `"armazenamento": "redis"`. Se aparecer `"memoria"`, o Redis não está conectado, e os carrinhos vão se perder entre as requisições.
 
 Carrinhos e compras ficam salvos por 60 dias sem uso.
+
+**Para mudar o catálogo**, edite `src/produtos.js`. Para trocar a imagem de um produto, substitua `public/imagens/<id>.png` (mesmo nome) e faça push.

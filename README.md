@@ -2,7 +2,7 @@
 
 API de produtos, carrinho e compras para o trabalho final de **Desenvolvimento de Aplicativos Móveis**.
 
-**Endereço:** `https://[endereço-da-api].vercel.app`
+**Endereço:** `https://loja-api-wheat.vercel.app`
 
 > **Todos os preços e totais estão em CENTAVOS.** `4990` = R$ 49,90. Para mostrar na tela, divida por 100 e formate em reais.
 
@@ -22,6 +22,16 @@ API de produtos, carrinho e compras para o trabalho final de **Desenvolvimento d
 | POST | `/compras` | Finaliza a compra com o carrinho atual |
 | GET | `/compras?usuarioId=` | Histórico de compras do usuário |
 | GET | `/compras/:id` | Detalhes de uma compra |
+
+## Autenticação (`x-api-key`)
+
+Toda requisição precisa do cabeçalho `x-api-key` com a chave que o professor passou em aula:
+
+```
+x-api-key: SUA_CHAVE
+```
+
+Sem a chave, ou com uma chave errada, a API responde `401`. As rotas `/` e `/status` e as imagens dos produtos não pedem chave, então o componente `<Image>` funciona só com a URL.
 
 ## O `usuarioId`
 
@@ -93,7 +103,7 @@ Filtros opcionais, que podem ser combinados:
     "preco": 19990,
     "categoria": "eletronicos",
     "estoque": 15,
-    "imagem": "https://[endereço-da-api].vercel.app/imagens/1.png"
+    "imagem": "https://loja-api-wheat.vercel.app/imagens/1.png"
   }
 ]
 ```
@@ -116,7 +126,7 @@ Todas as rotas que mudam o carrinho **devolvem o carrinho atualizado**. Não é 
       "produtoId": 1,
       "nome": "Fone de ouvido Bluetooth",
       "preco": 19990,
-      "imagem": "https://[endereço-da-api].vercel.app/imagens/1.png",
+      "imagem": "https://loja-api-wheat.vercel.app/imagens/1.png",
       "quantidade": 2,
       "subtotal": 39980
     }
@@ -187,6 +197,7 @@ Quando algo dá errado, a API responde com um status de erro e um JSON com a men
 | Status | Quando acontece |
 |---|---|
 | 400 | Dados inválidos: `produtoId` que não é número, quantidade menor que 1, estoque insuficiente, carrinho vazio, forma de pagamento inválida, `usuarioId` inválido |
+| 401 | Cabeçalho `x-api-key` ausente ou com a chave errada |
 | 404 | Produto, item do carrinho, compra ou rota não encontrados |
 | 500 | Erro na API |
 
@@ -207,11 +218,14 @@ GET /produtos?simularErro=true
 ## Exemplos com `fetch`
 
 ```ts
-const API = "https://[endereço-da-api].vercel.app";
+const API = "https://loja-api-wheat.vercel.app";
+const API_KEY = "SUA_CHAVE";
 
 // Listar produtos
 async function buscarProdutos(): Promise<Produto[]> {
-  const resposta = await fetch(`${API}/produtos`);
+  const resposta = await fetch(`${API}/produtos`, {
+    headers: { "x-api-key": API_KEY },
+  });
   if (!resposta.ok) throw new Error("Não foi possível carregar os produtos.");
   return resposta.json();
 }
@@ -220,7 +234,7 @@ async function buscarProdutos(): Promise<Produto[]> {
 async function adicionarAoCarrinho(usuarioId: string, produtoId: number): Promise<Carrinho> {
   const resposta = await fetch(`${API}/carrinho/${usuarioId}/itens`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", "x-api-key": API_KEY },
     body: JSON.stringify({ produtoId, quantidade: 1 }),
   });
   const dados = await resposta.json();
@@ -232,7 +246,7 @@ async function adicionarAoCarrinho(usuarioId: string, produtoId: number): Promis
 async function finalizarCompra(usuarioId: string, formaPagamento: FormaPagamento): Promise<Compra> {
   const resposta = await fetch(`${API}/compras`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", "x-api-key": API_KEY },
     body: JSON.stringify({ usuarioId, formaPagamento }),
   });
   const dados = await resposta.json();
@@ -261,6 +275,7 @@ npm run dev   # http://localhost:3000
 
 1. Importe o repositório na Vercel. Não precisa de configuração de build.
 2. Em **Storage**, crie um banco **Upstash for Redis** (plano gratuito) e conecte ao projeto. A integração cria as variáveis `KV_REST_API_URL` e `KV_REST_API_TOKEN`.
-3. Faça um novo deploy e abra `/status`. Deve aparecer `"armazenamento": "redis"`. Se aparecer `"memoria"`, o Redis não está conectado, e os carrinhos vão se perder entre as requisições.
+3. Em **Settings → Environment Variables**, crie `API_KEY` com a chave da turma. Sem essa variável, a API fica aberta (é o que acontece ao rodar localmente).
+4. Faça um novo deploy e abra `/status`. Deve aparecer `"armazenamento": "redis"`. Se aparecer `"memoria"`, o Redis não está conectado, e os carrinhos vão se perder entre as requisições.
 
 Carrinhos e compras ficam salvos por 60 dias sem uso.

@@ -73,6 +73,20 @@ function montarCarrinho(req, usuarioId, carrinho) {
   };
 }
 
+// ---------- autenticação por x-api-key ----------
+// A chave vem da variável API_KEY. Sem ela (rodando localmente), a API fica aberta.
+// "/", "/status" e as imagens não pedem chave.
+
+const ROTAS_PUBLICAS = ["/", "/status"];
+
+app.use((req, res, next) => {
+  if (!process.env.API_KEY || ROTAS_PUBLICAS.includes(req.path)) return next();
+  if (req.get("x-api-key") !== process.env.API_KEY) {
+    return erro(res, 401, "Chave de acesso inválida ou ausente: envie o cabeçalho x-api-key.");
+  }
+  next();
+});
+
 // ---------- simulação de lentidão e erro (para testar estados no app) ----------
 
 app.use(async (req, res, next) => {

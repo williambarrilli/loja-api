@@ -58,7 +58,7 @@ type Produto = {
   preco: number;      // em centavos
   categoria: Categoria;
   estoque: number;
-  imagem: string;     // URL da imagem (PNG)
+  imagem: string;     // URL da imagem (JPG)
 };
 
 type ItemCarrinho = {
@@ -93,7 +93,7 @@ type ErroApi = { erro: string };
 
 ## Produtos
 
-O catálogo é fixo: são 24 produtos em 9 categorias, e a API não tem rotas para criar ou editar produtos. A `imagem` sempre vem pronta na resposta: as imagens são servidas pela própria API (`/imagens/1.png` a `/imagens/12.png` e `/imagens/13.jpg` a `/imagens/24.jpg`). Uma URL de imagem enviada pelo app é ignorada.
+O catálogo é fixo: são 24 produtos em 9 categorias, e a API não tem rotas para criar ou editar produtos. A `imagem` sempre vem pronta na resposta: as imagens são fotos de 600×600 servidas pela própria API (`/imagens/<id>.jpg`). Uma URL de imagem enviada pelo app é ignorada.
 
 ### `GET /produtos`
 
@@ -111,7 +111,7 @@ Filtros opcionais, que podem ser combinados:
     "preco": 19990,
     "categoria": "eletronicos",
     "estoque": 15,
-    "imagem": "https://loja-api-wheat.vercel.app/imagens/1.png"
+    "imagem": "https://loja-api-wheat.vercel.app/imagens/1.jpg"
   }
 ]
 ```
@@ -142,7 +142,7 @@ Todas as rotas que mudam o carrinho **devolvem o carrinho atualizado**. Não é 
       "produtoId": 1,
       "nome": "Fone de ouvido Bluetooth",
       "preco": 19990,
-      "imagem": "https://loja-api-wheat.vercel.app/imagens/1.png",
+      "imagem": "https://loja-api-wheat.vercel.app/imagens/1.jpg",
       "quantidade": 2,
       "subtotal": 39980
     }
@@ -314,23 +314,35 @@ Abra `/status` para conferir: deve aparecer `"armazenamento": "redis"`. Se apare
 
 Carrinhos e compras ficam salvos por 60 dias sem uso.
 
-**Para mudar o catálogo**, edite `src/produtos.js`. As imagens ficam em `public/imagens`: cada produto usa `<id>.png`, ou o arquivo indicado no campo `imagem` (ex.: `"13.jpg"`). Para trocar uma imagem, substitua o arquivo (mesmo nome) e faça push.
+**Para mudar o catálogo**, edite `src/produtos.js`. A imagem de cada produto é `public/imagens/<id>.jpg`. Para trocar uma imagem, substitua o arquivo (mesmo nome) e faça push.
 
 ## Créditos das imagens
 
-As fotos dos produtos 13 a 24 (`public/imagens/13.jpg` a `24.jpg`) vêm do [Wikimedia Commons](https://commons.wikimedia.org), recortadas em 400×400, e são usadas conforme suas licenças. As de licença CC BY-SA continuam sob a mesma licença.
+As fotos dos produtos são do [Unsplash](https://unsplash.com) e seguem a [Licença Unsplash](https://unsplash.com/license), que permite uso gratuito. Elas foram recortadas em 600×600.
 
-| Produto | Autor | Licença | Arquivo |
-|---|---|---|---|
-| 13 | Andy Mabbett | CC BY-SA 4.0 | [Lav beer and glass - 2012-10-12 - Andy Mabbett.jpg](https://commons.wikimedia.org/wiki/File:Lav_beer_and_glass_-_2012-10-12_-_Andy_Mabbett.jpg) |
-| 14 | Nemracc | CC BY-SA 4.0 | [Glass of wheat beer Krautheimer, Friedrich Düll Brewery, Volkach-Krautheim, Lower Franconia.jpg](https://commons.wikimedia.org/wiki/File:Glass_of_wheat_beer_Krautheimer,_Friedrich_D%C3%BCll_Brewery,_Volkach-Krautheim,_Lower_Franconia.jpg) |
-| 15 | Shuntaro Kawasaki | CC0 | [Beer cans.jpg](https://commons.wikimedia.org/wiki/File:Beer_cans.jpg) |
-| 16 | Alexandre M. Plácido | Public domain | [Picanha.jpg](https://commons.wikimedia.org/wiki/File:Picanha.jpg) |
-| 17 | Rafael Meirelles | CC BY-SA 2.0 | [Côte (Costela de boi) (3220167933).jpg](https://commons.wikimedia.org/wiki/File:C%C3%B4te_(Costela_de_boi)_(3220167933).jpg) |
-| 18 | pic_p_ter | Public domain | [Glass cola.jpg](https://commons.wikimedia.org/wiki/File:Glass_cola.jpg) |
-| 19 | Ubcule | CC BY-SA 3.0 | [Orangeade.jpg](https://commons.wikimedia.org/wiki/File:Orangeade.jpg) |
-| 20 | Evan-Amos | Public domain | [Hershey-bar-open.JPG](https://commons.wikimedia.org/wiki/File:Hershey-bar-open.JPG) |
-| 21 | Mx. Granger | CC0 | [Righteously Raw chocolate.jpg](https://commons.wikimedia.org/wiki/File:Righteously_Raw_chocolate.jpg) |
-| 22 | Alf van Beem | CC0 | [Victoria Bonbons Assortis box, pic1.JPG](https://commons.wikimedia.org/wiki/File:Victoria_Bonbons_Assortis_box,_pic1.JPG) |
-| 23 | stu_spivack | CC BY-SA 2.0 | [Hot dog 01.jpg](https://commons.wikimedia.org/wiki/File:Hot_dog_01.jpg) |
-| 24 | Francesc Fort | CC BY-SA 4.0 | [Hot dog gourmet.jpg](https://commons.wikimedia.org/wiki/File:Hot_dog_gourmet.jpg) |
+| Produto | Foto de |
+|---|---|
+| 1 | [C D-X](https://unsplash.com/@cdx2) · [ver foto](https://unsplash.com/photos/fotografia-flatlay-de-fones-de-ouvido-sem-fio-PDX_a_82obo) |
+| 2 | [Pascal M.](https://unsplash.com/@toastyraw) · [ver foto](https://unsplash.com/photos/mouse-de-computador-preto-sem-fio-na-superficie-preta-4PchFKrUw84) |
+| 3 | [Stefen Tan](https://unsplash.com/@stefentan) · [ver foto](https://unsplash.com/photos/teclado-de-computador-preto-e-laranja-KYw1eUx1J7Y) |
+| 4 | [Markus Winkler](https://unsplash.com/@markuswinkler) · [ver foto](https://unsplash.com/photos/fios-revestidos-brancos-e-azuis-UP_RojtnvTU) |
+| 5 | [mockupbee](https://unsplash.com/@mockupbee) · [ver foto](https://unsplash.com/photos/uma-camisa-branca-em-um-fundo-branco-4rUYuwJ2vGw) |
+| 6 | [Mediamodifier](https://unsplash.com/@mediamodifier) · [ver foto](https://unsplash.com/photos/moletom-branco-e-jeans-desgastados-kJXGTOY1wLQ) |
+| 7 | [personalgraphic.com](https://unsplash.com/@personal_graphic) · [ver foto](https://unsplash.com/photos/um-bone-de-beisebol-branco-em-um-fundo-cinza-ozdzzeBu4Go) |
+| 8 | [Battlecreek Coffee Roasters](https://unsplash.com/@battlecreekcoffeeroasters) · [ver foto](https://unsplash.com/photos/um-close-up-de-um-copo-em-uma-mesa-Yh_EB2snOrw) |
+| 9 | [Oscar Ivan Esquivel Arteaga](https://unsplash.com/@oscaresquivel) · [ver foto](https://unsplash.com/photos/candeeiro-de-mesa-vermelho-e-prateado-at5-1nW3UCY) |
+| 10 | [Karl Köhler](https://unsplash.com/@karlkoehler) · [ver foto](https://unsplash.com/photos/copo-de-aco-inoxidavel-mizu-preto-dGIEMeN2MV8) |
+| 11 | [Андрей Сизов](https://unsplash.com/@alpridephoto) · [ver foto](https://unsplash.com/photos/um-livro-com-um-diagrama-sobre-ele-nuz3rK5iiKg) |
+| 12 | [Nangialai Stoman](https://unsplash.com/@stoman) · [ver foto](https://unsplash.com/photos/uma-pilha-de-livros-sentados-na-frente-de-um-computador-1Lt1ny9nGWY) |
+| 13 | [Jan Gunnar Nygård](https://unsplash.com/@jangnyg) · [ver foto](https://unsplash.com/photos/uma-garrafa-de-vidro-marrom-com-goticulas-de-agua-sobre-ele-hhxjE6qjKq0) |
+| 14 | [Denis](https://unsplash.com/@denis96) · [ver foto](https://unsplash.com/photos/uma-garrafa-e-um-copo-de-erdinger-weissbier-h10vSJyaVzQ) |
+| 15 | [Majkl Velner](https://unsplash.com/@majklvelner) · [ver foto](https://unsplash.com/photos/muitas-latas-amarelas-e-verdes-sao-empilhadas-juntas-g1-uTCmZGKc) |
+| 16 | [David Foodphototasty](https://unsplash.com/@phototastyfood) · [ver foto](https://unsplash.com/photos/dois-bifes-em-um-prato-com-salsa-U5lLwx17rWs) |
+| 17 | [Brian Wegman](https://unsplash.com/@trytoscareme) · [ver foto](https://unsplash.com/photos/um-rack-de-costelas-cozinhando-em-uma-grelha-QtLYiB6P-KM) |
+| 18 | [Brandee Taylor](https://unsplash.com/@brandee35) · [ver foto](https://unsplash.com/photos/cola-servindo-em-um-copo-com-gelo-uurg0rkdNjE) |
+| 19 | [Fernando Andrade](https://unsplash.com/@thisisnando) · [ver foto](https://unsplash.com/photos/garrafa-de-vidro-cheia-NfaZjll9-8g) |
+| 20 | [Tetiana Bykovets](https://unsplash.com/@tetiana_bykovets) · [ver foto](https://unsplash.com/photos/barra-de-chocolate-na-mesa-branca-TzN2odwnesg) |
+| 21 | [Tamanna Rumee](https://unsplash.com/@tamanna_rumee) · [ver foto](https://unsplash.com/photos/varios-pedacos-de-chocolate-amargo-sobre-tecido-marrom-2g3BYLqJwMQ) |
+| 22 | [sooji min](https://unsplash.com/@_sooji) · [ver foto](https://unsplash.com/photos/uma-caixa-de-chocolates-variados-sentada-em-uma-mesa-Kfdvn0cW9FE) |
+| 23 | [engin akyurt](https://unsplash.com/@enginakyurt) · [ver foto](https://unsplash.com/photos/cachorro-quente-com-mostarda-no-pao-L6FM5ZPkQ7U) |
+| 24 | [王 大洪](https://unsplash.com/@mr_wdh) · [ver foto](https://unsplash.com/photos/um-cachorro-quente-em-um-pao-com-ketchup-mostarda-e-saborear-PPwYBaC_g8M) |

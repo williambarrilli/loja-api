@@ -27,7 +27,7 @@ function urlBase(req) {
 }
 
 function urlImagem(req, produto) {
-  return `${urlBase(req)}/imagens/${produto.imagem || `${produto.id}.png`}`;
+  return `${urlBase(req)}/imagens/${produto.id}.jpg`;
 }
 
 function comImagem(req, produto) {

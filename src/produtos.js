@@ -1,6 +1,5 @@
 // Catálogo fixo da loja. Preços em CENTAVOS (inteiros): 4990 = R$ 49,90.
-// As imagens ficam em public/imagens: <id>.png por padrão, ou o arquivo indicado em "imagem".
-// As fotos .jpg são de licença livre do Wikimedia Commons (créditos no README).
+// A imagem de cada produto é public/imagens/<id>.jpg (fotos do Unsplash, créditos no README).
 
 const categorias = [
   { id: "eletronicos", nome: "Eletrônicos" },
@@ -27,18 +26,18 @@ const produtos = [
   { id: 10, nome: "Garrafa de água", descricao: "Garrafa reutilizável de 750 ml, livre de BPA.", preco: 3990, categoria: "casa", estoque: 60 },
   { id: 11, nome: "Livro de algoritmos", descricao: "Introdução a algoritmos e estruturas de dados com exemplos.", preco: 8990, categoria: "livros", estoque: 18 },
   { id: 12, nome: "Livro de React Native", descricao: "Guia prático para criar aplicativos móveis com React Native.", preco: 9990, categoria: "livros", estoque: 5 },
-  { id: 13, nome: "Cerveja Pilsen long neck", descricao: "Cerveja leve e refrescante, garrafa de 355 ml.", preco: 699, categoria: "cervejas", estoque: 48, imagem: "13.jpg" },
-  { id: 14, nome: "Cerveja de trigo", descricao: "Cerveja de trigo estilo alemão, encorpada e aromática, garrafa de 500 ml.", preco: 1590, categoria: "cervejas", estoque: 24, imagem: "14.jpg" },
-  { id: 15, nome: "Pack de cerveja com 12 latas", descricao: "Doze latas de 350 ml de cerveja Pilsen.", preco: 4990, categoria: "cervejas", estoque: 10, imagem: "15.jpg" },
-  { id: 16, nome: "Picanha", descricao: "Peça de picanha bovina, aproximadamente 1 kg.", preco: 8990, categoria: "carnes", estoque: 8, imagem: "16.jpg" },
-  { id: 17, nome: "Costela bovina", descricao: "Costela bovina para assar, aproximadamente 1 kg.", preco: 3990, categoria: "carnes", estoque: 15, imagem: "17.jpg" },
-  { id: 18, nome: "Refrigerante de cola", descricao: "Refrigerante sabor cola, garrafa de 2 litros.", preco: 999, categoria: "refrigerantes", estoque: 40, imagem: "18.jpg" },
-  { id: 19, nome: "Refrigerante de laranja", descricao: "Refrigerante sabor laranja, garrafa de 2 litros.", preco: 849, categoria: "refrigerantes", estoque: 35, imagem: "19.jpg" },
-  { id: 20, nome: "Barra de chocolate ao leite", descricao: "Chocolate ao leite cremoso, barra de 90 g.", preco: 699, categoria: "chocolates", estoque: 60, imagem: "20.jpg" },
-  { id: 21, nome: "Chocolate amargo 70%", descricao: "Chocolate com 70% de cacau, barra de 100 g.", preco: 1290, categoria: "chocolates", estoque: 30, imagem: "21.jpg" },
-  { id: 22, nome: "Caixa de bombons", descricao: "Caixa com bombons sortidos, 250 g.", preco: 1490, categoria: "chocolates", estoque: 3, imagem: "22.jpg" },
-  { id: 23, nome: "Cachorro-quente tradicional", descricao: "Pão, salsicha, molho de tomate, mostarda e ketchup.", preco: 1290, categoria: "cachorro-quente", estoque: 20, imagem: "23.jpg" },
-  { id: 24, nome: "Cachorro-quente completo", descricao: "Pão, duas salsichas, purê, milho, ervilha, queijo ralado e batata palha.", preco: 1890, categoria: "cachorro-quente", estoque: 15, imagem: "24.jpg" },
+  { id: 13, nome: "Cerveja Pilsen long neck", descricao: "Cerveja leve e refrescante, garrafa de 355 ml.", preco: 699, categoria: "cervejas", estoque: 48 },
+  { id: 14, nome: "Cerveja de trigo", descricao: "Cerveja de trigo estilo alemão, encorpada e aromática, garrafa de 500 ml.", preco: 1590, categoria: "cervejas", estoque: 24 },
+  { id: 15, nome: "Pack de cerveja com 12 latas", descricao: "Doze latas de 350 ml de cerveja Pilsen.", preco: 4990, categoria: "cervejas", estoque: 10 },
+  { id: 16, nome: "Picanha", descricao: "Peça de picanha bovina, aproximadamente 1 kg.", preco: 8990, categoria: "carnes", estoque: 8 },
+  { id: 17, nome: "Costela bovina", descricao: "Costela bovina para assar, aproximadamente 1 kg.", preco: 3990, categoria: "carnes", estoque: 15 },
+  { id: 18, nome: "Refrigerante de cola", descricao: "Refrigerante sabor cola, garrafa de 2 litros.", preco: 999, categoria: "refrigerantes", estoque: 40 },
+  { id: 19, nome: "Refrigerante de laranja", descricao: "Refrigerante sabor laranja, garrafa de 2 litros.", preco: 849, categoria: "refrigerantes", estoque: 35 },
+  { id: 20, nome: "Barra de chocolate ao leite", descricao: "Chocolate ao leite cremoso, barra de 90 g.", preco: 699, categoria: "chocolates", estoque: 60 },
+  { id: 21, nome: "Chocolate amargo 70%", descricao: "Chocolate com 70% de cacau, barra de 100 g.", preco: 1290, categoria: "chocolates", estoque: 30 },
+  { id: 22, nome: "Caixa de bombons", descricao: "Caixa com bombons sortidos, 250 g.", preco: 1490, categoria: "chocolates", estoque: 3 },
+  { id: 23, nome: "Cachorro-quente tradicional", descricao: "Pão, salsicha, molho de tomate, mostarda e ketchup.", preco: 1290, categoria: "cachorro-quente", estoque: 20 },
+  { id: 24, nome: "Cachorro-quente completo", descricao: "Pão, duas salsichas, purê, milho, ervilha, queijo ralado e batata palha.", preco: 1890, categoria: "cachorro-quente", estoque: 15 },
 ];
 
 module.exports = { categorias, produtos };

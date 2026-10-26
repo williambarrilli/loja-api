@@ -9,6 +9,21 @@
         "dev"
       ],
       "port": 3000
+    },
+    {
+      "name": "exemplo-react",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "--prefix",
+        "exemplo-react",
+        "run",
+        "dev",
+        "--",
+        "--port",
+        "5173",
+        "--strictPort"
+      ],
+      "port": 5173
     }
   ]
 }

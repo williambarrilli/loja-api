@@ -1,0 +1,75 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background: #f4f4f5;
+  color: #18181b;
+}
+
+main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+h1 {
+  margin: 0;
+}
+
+.subtitulo {
+  margin: 4px 0 24px;
+  color: #71717a;
+  font-family: monospace;
+}
+
+.grade {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.cartao {
+  background: #fff;
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
+}
+
+.cartao img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.cartao h2 {
+  font-size: 16px;
+  margin: 8px 0 4px;
+}
+
+.preco {
+  margin: 0;
+  font-weight: 700;
+  color: #15803d;
+}
+
+.estoque {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: #71717a;
+}
+
+.aviso {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.erro {
+  color: #b91c1c;
+}

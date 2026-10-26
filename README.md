@@ -93,7 +93,7 @@ type ErroApi = { erro: string };
 
 ## Produtos
 
-O catálogo é fixo: são 24 produtos em 9 categorias, e a API não tem rotas para criar ou editar produtos. A `imagem` sempre vem pronta na resposta: os produtos 1 a 12 usam imagens da própria API (`/imagens/<id>.png`) e os 13 a 24 usam fotos do Wikimedia Commons. Uma URL de imagem enviada pelo app é ignorada.
+O catálogo é fixo: são 24 produtos em 9 categorias, e a API não tem rotas para criar ou editar produtos. A `imagem` sempre vem pronta na resposta: as imagens são servidas pela própria API (`/imagens/1.png` a `/imagens/12.png` e `/imagens/13.jpg` a `/imagens/24.jpg`). Uma URL de imagem enviada pelo app é ignorada.
 
 ### `GET /produtos`
 
@@ -314,11 +314,11 @@ Abra `/status` para conferir: deve aparecer `"armazenamento": "redis"`. Se apare
 
 Carrinhos e compras ficam salvos por 60 dias sem uso.
 
-**Para mudar o catálogo**, edite `src/produtos.js`. Um produto com o campo `imagem` usa essa URL; sem ele, usa `public/imagens/<id>.png`. Para trocar uma dessas imagens locais, substitua o arquivo (mesmo nome) e faça push.
+**Para mudar o catálogo**, edite `src/produtos.js`. As imagens ficam em `public/imagens`: cada produto usa `<id>.png`, ou o arquivo indicado no campo `imagem` (ex.: `"13.jpg"`). Para trocar uma imagem, substitua o arquivo (mesmo nome) e faça push.
 
 ## Créditos das imagens
 
-As fotos dos produtos 13 a 24 vêm do [Wikimedia Commons](https://commons.wikimedia.org) e são usadas conforme suas licenças.
+As fotos dos produtos 13 a 24 (`public/imagens/13.jpg` a `24.jpg`) vêm do [Wikimedia Commons](https://commons.wikimedia.org), recortadas em 400×400, e são usadas conforme suas licenças. As de licença CC BY-SA continuam sob a mesma licença.
 
 | Produto | Autor | Licença | Arquivo |
 |---|---|---|---|

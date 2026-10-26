@@ -46,7 +46,9 @@ Em `POST` e `PUT`, envie o corpo em JSON com o cabeçalho `Content-Type: applica
 ## Tipos (TypeScript)
 
 ```ts
-type Categoria = "eletronicos" | "roupas" | "casa" | "livros";
+type Categoria =
+  | "eletronicos" | "roupas" | "casa" | "livros"
+  | "cervejas" | "carnes" | "refrigerantes" | "chocolates" | "cachorro-quente";
 type FormaPagamento = "pix" | "cartao" | "boleto";
 
 type Produto = {
@@ -91,7 +93,7 @@ type ErroApi = { erro: string };
 
 ## Produtos
 
-O catálogo é fixo: são 12 produtos em 4 categorias, e a API não tem rotas para criar ou editar produtos. A `imagem` é montada pela API a partir do `id` (`/imagens/<id>.png`), então uma URL de imagem enviada pelo app é ignorada.
+O catálogo é fixo: são 24 produtos em 9 categorias, e a API não tem rotas para criar ou editar produtos. A `imagem` sempre vem pronta na resposta: os produtos 1 a 12 usam imagens da própria API (`/imagens/<id>.png`) e os 13 a 24 usam fotos do Wikimedia Commons. Uma URL de imagem enviada pelo app é ignorada.
 
 ### `GET /produtos`
 
@@ -120,7 +122,7 @@ Devolve um `Produto`, ou `404` se ele não existir.
 
 ### `GET /categorias`
 
-Devolve `eletronicos`, `roupas`, `casa` e `livros`, cada uma com `id` e `nome`.
+Devolve `eletronicos`, `roupas`, `casa`, `livros`, `cervejas`, `carnes`, `refrigerantes`, `chocolates` e `cachorro-quente`, cada uma com `id` e `nome`.
 
 ### `GET /formas-pagamento`
 
@@ -312,4 +314,23 @@ Abra `/status` para conferir: deve aparecer `"armazenamento": "redis"`. Se apare
 
 Carrinhos e compras ficam salvos por 60 dias sem uso.
 
-**Para mudar o catálogo**, edite `src/produtos.js`. Para trocar a imagem de um produto, substitua `public/imagens/<id>.png` (mesmo nome) e faça push.
+**Para mudar o catálogo**, edite `src/produtos.js`. Um produto com o campo `imagem` usa essa URL; sem ele, usa `public/imagens/<id>.png`. Para trocar uma dessas imagens locais, substitua o arquivo (mesmo nome) e faça push.
+
+## Créditos das imagens
+
+As fotos dos produtos 13 a 24 vêm do [Wikimedia Commons](https://commons.wikimedia.org) e são usadas conforme suas licenças.
+
+| Produto | Autor | Licença | Arquivo |
+|---|---|---|---|
+| 13 | Andy Mabbett | CC BY-SA 4.0 | [Lav beer and glass - 2012-10-12 - Andy Mabbett.jpg](https://commons.wikimedia.org/wiki/File:Lav_beer_and_glass_-_2012-10-12_-_Andy_Mabbett.jpg) |
+| 14 | Nemracc | CC BY-SA 4.0 | [Glass of wheat beer Krautheimer, Friedrich Düll Brewery, Volkach-Krautheim, Lower Franconia.jpg](https://commons.wikimedia.org/wiki/File:Glass_of_wheat_beer_Krautheimer,_Friedrich_D%C3%BCll_Brewery,_Volkach-Krautheim,_Lower_Franconia.jpg) |
+| 15 | Shuntaro Kawasaki | CC0 | [Beer cans.jpg](https://commons.wikimedia.org/wiki/File:Beer_cans.jpg) |
+| 16 | Alexandre M. Plácido | Public domain | [Picanha.jpg](https://commons.wikimedia.org/wiki/File:Picanha.jpg) |
+| 17 | Rafael Meirelles | CC BY-SA 2.0 | [Côte (Costela de boi) (3220167933).jpg](https://commons.wikimedia.org/wiki/File:C%C3%B4te_(Costela_de_boi)_(3220167933).jpg) |
+| 18 | pic_p_ter | Public domain | [Glass cola.jpg](https://commons.wikimedia.org/wiki/File:Glass_cola.jpg) |
+| 19 | Ubcule | CC BY-SA 3.0 | [Orangeade.jpg](https://commons.wikimedia.org/wiki/File:Orangeade.jpg) |
+| 20 | Evan-Amos | Public domain | [Hershey-bar-open.JPG](https://commons.wikimedia.org/wiki/File:Hershey-bar-open.JPG) |
+| 21 | Mx. Granger | CC0 | [Righteously Raw chocolate.jpg](https://commons.wikimedia.org/wiki/File:Righteously_Raw_chocolate.jpg) |
+| 22 | Alf van Beem | CC0 | [Victoria Bonbons Assortis box, pic1.JPG](https://commons.wikimedia.org/wiki/File:Victoria_Bonbons_Assortis_box,_pic1.JPG) |
+| 23 | stu_spivack | CC BY-SA 2.0 | [Hot dog 01.jpg](https://commons.wikimedia.org/wiki/File:Hot_dog_01.jpg) |
+| 24 | Francesc Fort | CC BY-SA 4.0 | [Hot dog gourmet.jpg](https://commons.wikimedia.org/wiki/File:Hot_dog_gourmet.jpg) |

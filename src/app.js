@@ -26,8 +26,12 @@ function urlBase(req) {
   return `${protocolo}://${req.get("host")}`;
 }
 
+function urlImagem(req, produto) {
+  return produto.imagem || `${urlBase(req)}/imagens/${produto.id}.png`;
+}
+
 function comImagem(req, produto) {
-  return { ...produto, imagem: `${urlBase(req)}/imagens/${produto.id}.png` };
+  return { ...produto, imagem: urlImagem(req, produto) };
 }
 
 function buscarProduto(id) {
@@ -60,7 +64,7 @@ function montarCarrinho(req, usuarioId, carrinho) {
       produtoId,
       nome: produto.nome,
       preco: produto.preco,
-      imagem: `${urlBase(req)}/imagens/${produto.id}.png`,
+      imagem: urlImagem(req, produto),
       quantidade,
       subtotal: produto.preco * quantidade,
     };
